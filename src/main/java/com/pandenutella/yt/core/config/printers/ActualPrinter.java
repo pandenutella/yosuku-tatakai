@@ -1,6 +1,6 @@
 package com.pandenutella.yt.core.config.printers;
 
-import com.pandenutella.yt.core.Fighter;
+import com.pandenutella.yt.core.Mage;
 import com.pandenutella.yt.core.config.Printer;
 
 import java.util.List;
@@ -53,25 +53,27 @@ public class ActualPrinter implements Printer {
     }
 
     @Override
-    public void printStatus(List<Fighter> fighterList) {
+    public void printStatus(List<Mage> mageList) {
         printThickLine();
         System.out.println(colorTextWith("[STATUS]", BOLD_BLUE));
 
-        fighterList.forEach(fighter -> {
-            System.out.printf("%s has %s/%s HP%n",
-                    colorTextWith(fighter.getName(), BOLD_YELLOW),
-                    colorTextWith(valueOf(fighter.getLife()), BOLD_GREEN),
-                    colorTextWith(valueOf(fighter.getMaxLife()), BOLD_GREEN));
+        mageList.forEach(mage -> {
+            System.out.printf("%s has [%s/%s HP] [%s/%s MP]%n",
+                    colorTextWith(mage.getName(), BOLD_YELLOW),
+                    colorTextWith(valueOf(mage.getLife()), BOLD_GREEN),
+                    colorTextWith(valueOf(mage.getMaxLife()), BOLD_GREEN),
+                    colorTextWith(valueOf(mage.getMana()), BOLD_BLUE),
+                    colorTextWith(valueOf(mage.getMaxMana()), BOLD_BLUE));
         });
         printThickLine();
     }
 
     @Override
-    public void printMoveUsed(String attacker, String move, String defender, String otherDescription) {
+    public void printSpellUsed(String caster, String move, String target, String otherDescription) {
         System.out.printf("%s used %s%s, %s.%n",
-                colorTextWith(attacker, BOLD_YELLOW),
+                colorTextWith(caster, BOLD_YELLOW),
                 colorTextWith(move, BOLD_YELLOW),
-                isNull(defender) ? "" : " against %s".formatted(colorTextWith(defender, BOLD_YELLOW)),
+                isNull(target) ? "" : " against %s".formatted(colorTextWith(target, BOLD_YELLOW)),
                 otherDescription);
     }
 }

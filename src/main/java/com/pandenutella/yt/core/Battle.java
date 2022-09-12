@@ -1,99 +1,119 @@
 package com.pandenutella.yt.core;
 
-import com.pandenutella.yt.core.exceptions.FighterDefeatedException;
+import com.pandenutella.yt.core.exceptions.MageDefeatedException;
+import com.pandenutella.yt.core.utilities.ManaCostConverter;
 import lombok.RequiredArgsConstructor;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
-import static com.pandenutella.yt.core.utilities.SpeedChecker.isSpeedFaster;
+import static com.pandenutella.yt.core.enums.Color.BOLD_BLUE;
+import static com.pandenutella.yt.core.enums.Color.BOLD_RED;
+import static com.pandenutella.yt.core.utilities.ColorUtility.colorTextWith;
+import static java.lang.Math.max;
+import static java.lang.String.valueOf;
 import static java.util.Arrays.asList;
 
 @RequiredArgsConstructor
 public class Battle {
-    private final Fighter fighterOne;
-    private final Fighter fighterTwo;
-    private final MoveFactory moveFactory;
+    private final Mage mageOne;
+    private final Mage mageTwo;
     private final Utility utility;
+    private final int spellsPerRound;
+    private final ManaCostConverter manaCostConverter;
 
     public void start() {
         try {
-            for (int round = 1; round <= 10; round++) {
-                Fighter attacker = round % 2 == 1 ? fighterOne : fighterTwo;
-                Fighter defender = round % 2 == 1 ? fighterTwo : fighterOne;
+            for (int round = 1; round <= 7; round++) {
+                Mage attacker = round % 2 == 1 ? mageOne : mageTwo;
+                Mage defender = round % 2 == 1 ? mageTwo : mageOne;
 
                 utility.getPrinter().printRoundHeader(round, attacker.getName(), defender.getName());
                 utility.getClock().waitFor(2);
 
-                Combo combo = attacker.executeCombo(attacker.getLife(), defender.getLife());
+                String offenseManaCostsRaw = attacker.attack(attacker.getLife(), defender.getLife());
+                int[] offenseManaCosts = manaCostConverter.getManaCosts(offenseManaCostsRaw, spellsPerRound);
+                int totalOffenseManaCost = manaCostConverter.getTotalManaCost(offenseManaCostsRaw, spellsPerRound);
 
-                List<Move> comboMoveList = combo.getMoveList().stream()
-                        .map(moveFactory::getMove)
-                        .collect(Collectors.toList());
-                Combo counterCombo = defender.executeCounterCombo(defender.getLife(), attacker.getLife(), comboMoveList);
+                String defenseManaCostRaw = defender.defend(defender.getLife(), defender.getMana(), attacker.getMana(), totalOffenseManaCost);
+                int[] defenseManaCosts = manaCostConverter.getManaCosts(defenseManaCostRaw, spellsPerRound);
 
-                for (int moveNumber = 1; moveNumber <= 3; moveNumber++) {
-                    utility.getPrinter().printMoveHeader(moveNumber);
+                for (int spellIndex = 0; spellIndex < spellsPerRound; spellIndex++) {
+                    utility.getPrinter().printMoveHeader(spellIndex + 1);
                     utility.getClock().waitFor(.5);
 
-                    Move move = moveFactory.getMove(combo.getMoveList().get(moveNumber - 1));
-                    Move counterMove = moveFactory.getMove(counterCombo.getMoveList().get(moveNumber - 1));
+                    int defenseManaCost = defenseManaCosts[spellIndex];
+                    int offenseManaCost = offenseManaCosts[spellIndex];
 
-                    if (isSpeedFaster(move.getSpeed(), counterMove.getSpeed())) {
-                        move.perform(attacker, defender);
-                        checkIfAlreadyDefeated(defender);
-
-                        utility.getClock().waitFor(.5);
-
-                        counterMove.perform(defender, attacker);
-                        checkIfAlreadyDefeated(attacker);
+                    if (defenseManaCost == 0) {
+                        defender.regenerateMana(1);
+                        utility.getPrinter().printSpellUsed(defender.getName(), "Meditate", null,
+                                "generating %s mana".formatted(colorTextWith(valueOf(1), BOLD_BLUE)));
+                    } else if (defenseManaCost <= defender.getMana()) {
+                        defender.burnMana(defenseManaCost);
+                        utility.getPrinter().printSpellUsed(defender.getName(), "Mana Shield (Tier %d)".formatted(defenseManaCost), null,
+                                "blocking up to %s damage".formatted(colorTextWith(valueOf(defenseManaCost), BOLD_RED)));
                     } else {
-                        counterMove.perform(defender, attacker);
-                        checkIfAlreadyDefeated(attacker);
+                        double bouncedMana = defenseManaCost - defender.getMana();
+                        defender.receiveDamage(bouncedMana);
+                        defender.burnMana(defenseManaCost);
 
-                        utility.getClock().waitFor(.5);
+                        utility.getPrinter().printSpellUsed(defender.getName(), "Defective Mana Shield (Tier %d)".formatted(defenseManaCost), null,
+                                "causing surrounding mana to explode and receive %s damage".formatted(colorTextWith(valueOf(bouncedMana), BOLD_RED)));
 
-                        move.perform(attacker, defender);
                         checkIfAlreadyDefeated(defender);
                     }
 
-                    attacker.setNimble(false);
-                    defender.setNimble(false);
+                    utility.getClock().waitFor(.5);
+
+                    if (offenseManaCost == 0) {
+                        attacker.regenerateMana(1);
+                        utility.getPrinter().printSpellUsed(attacker.getName(), "Meditate", null,
+                                "generating %s mana".formatted(colorTextWith(valueOf(1), BOLD_BLUE)));
+                    } else if(offenseManaCost <= attacker.getMana()) {
+                        attacker.burnMana(offenseManaCost);
+                        double damageDealt = max(offenseManaCost - defenseManaCost, 0);
+                        defender.receiveDamage(damageDealt);
+                        utility.getPrinter().printSpellUsed(attacker.getName(), "Mana Blast (Tier %d)".formatted(offenseManaCost), defender.getName(),
+                                "dealing %s damage".formatted(colorTextWith(valueOf(damageDealt), BOLD_RED)));
+
+                        checkIfAlreadyDefeated(defender);
+                    } else {
+                        double bouncedMana = offenseManaCost - attacker.getMana();
+                        attacker.receiveDamage(bouncedMana);
+                        attacker.burnMana(offenseManaCost);
+
+                        utility.getPrinter().printSpellUsed(attacker.getName(), "Defective Mana Burst (Tier %d)".formatted(offenseManaCost), null,
+                                "causing surrounding mana to explode and receive %s damage".formatted(colorTextWith(valueOf(bouncedMana), BOLD_RED)));
+
+                        checkIfAlreadyDefeated(attacker);
+                    }
 
                     utility.getClock().waitFor(2);
                 }
 
-                attacker.setShield(0);
-                defender.setShield(0);
+                attacker.regenerateMana(1);
+                defender.regenerateMana(1);
 
-                attacker.setDamageMultiplier(1);
-                defender.setDamageMultiplier(1);
-
-                attacker.heal(2.5);
-                defender.heal(2.5);
-
-                utility.getPrinter().printStatus(asList(fighterOne, fighterTwo));
+                utility.getPrinter().printStatus(asList(mageOne, mageTwo));
                 utility.getClock().waitFor(4);
             }
-        } catch (FighterDefeatedException ignored) {
+        } catch (MageDefeatedException ignored) {
         }
 
         finalizeResults();
     }
 
-    private void checkIfAlreadyDefeated(Fighter fighter) throws FighterDefeatedException {
-        if (fighter.getLife() > 0)
+    private void checkIfAlreadyDefeated(Mage mage) throws MageDefeatedException {
+        if (mage.getLife() > 0)
             return;
 
-        throw new FighterDefeatedException();
+        throw new MageDefeatedException();
     }
 
     private void finalizeResults() {
         String winner;
-        if (fighterTwo.getLife() == 0)
-            winner = fighterOne.getName();
-        else if (fighterOne.getLife() == 0)
-            winner = fighterTwo.getName();
+        if (mageTwo.getLife() == 0)
+            winner = mageOne.getName();
+        else if (mageOne.getLife() == 0)
+            winner = mageTwo.getName();
         else
             winner = null;
 

@@ -1,6 +1,6 @@
 package com.pandenutella.yt.core.config;
 
-import com.pandenutella.yt.core.Fighter;
+import com.pandenutella.yt.core.Mage;
 
 import java.util.List;
 
@@ -15,7 +15,7 @@ public interface Printer {
 
     void printResults(String winner);
 
-    void printStatus(List<Fighter> fighterList);
+    void printStatus(List<Mage> mageList);
 
-    void printMoveUsed(String attacker, String move, String defender, String otherDescription);
+    void printSpellUsed(String caster, String move, String target, String otherDescription);
 }
