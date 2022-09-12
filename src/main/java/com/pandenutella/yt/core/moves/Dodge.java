@@ -5,11 +5,11 @@ import com.pandenutella.yt.core.Move;
 import com.pandenutella.yt.core.enums.Speed;
 
 import static com.pandenutella.yt.core.enums.Speed.FAST;
-import static com.pandenutella.yt.core.utilities.BattleUtility.displayMoveUsed;
 
-public class Dodge implements Move {
+public class Dodge extends Move {
+
     @Override
-    public Speed getSpeed() {
+    protected Speed getSpeed() {
         return FAST;
     }
 
@@ -17,6 +17,6 @@ public class Dodge implements Move {
     public void perform(Fighter user, Fighter target) {
         user.setNimble(true);
 
-        displayMoveUsed(user.getName(), "Dodge", null, "granting evasion until the next move");
+        getPrinter().printMoveUsed(user.getName(), "Dodge", null, "granting evasion until the next move");
     }
 }

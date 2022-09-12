@@ -3,17 +3,17 @@ package com.pandenutella.yt.core;
 import com.pandenutella.yt.core.exceptions.FighterDefeatedException;
 import lombok.RequiredArgsConstructor;
 
-import static com.pandenutella.yt.core.utilities.BattleUtility.displayMoveHeader;
-import static com.pandenutella.yt.core.utilities.BattleUtility.displayResults;
-import static com.pandenutella.yt.core.utilities.BattleUtility.displayRoundHeader;
-import static com.pandenutella.yt.core.utilities.BattleUtility.displayStatus;
-import static com.pandenutella.yt.core.utilities.BattleUtility.waitSeconds;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import static com.pandenutella.yt.core.utilities.SpeedChecker.isSpeedFaster;
 
 @RequiredArgsConstructor
 public class Battle {
     private final Fighter fighterOne;
     private final Fighter fighterTwo;
+    private final MoveFactory moveFactory;
+    private final Utility utility;
 
     public void start() {
         try {
@@ -21,24 +21,28 @@ public class Battle {
                 Fighter attacker = round % 2 == 1 ? fighterOne : fighterTwo;
                 Fighter defender = round % 2 == 1 ? fighterTwo : fighterOne;
 
-                displayRoundHeader(round, attacker.getName(), defender.getName());
-                waitSeconds(2);
+                utility.getPrinter().printRoundHeader(round, attacker.getName(), defender.getName());
+                utility.getClock().waitFor(2);
 
                 Combo combo = attacker.executeCombo(attacker.getLife(), defender.getLife());
-                Combo counterCombo = defender.executeCounterCombo(defender.getLife(), attacker.getLife(), combo.getMoveList());
+
+                List<Move> comboMoveList = combo.getMoveList().stream()
+                        .map(moveFactory::getMove)
+                        .collect(Collectors.toList());
+                Combo counterCombo = defender.executeCounterCombo(defender.getLife(), attacker.getLife(), comboMoveList);
 
                 for (int moveNumber = 1; moveNumber <= 3; moveNumber++) {
-                    displayMoveHeader(moveNumber);
-                    waitSeconds(.5);
+                    utility.getPrinter().printMoveHeader(moveNumber);
+                    utility.getClock().waitFor(.5);
 
-                    Move move = combo.getMoveList().get(moveNumber - 1);
-                    Move counterMove = counterCombo.getMoveList().get(moveNumber - 1);
+                    Move move = moveFactory.getMove(combo.getMoveList().get(moveNumber - 1));
+                    Move counterMove = moveFactory.getMove(counterCombo.getMoveList().get(moveNumber - 1));
 
                     if (isSpeedFaster(move.getSpeed(), counterMove.getSpeed())) {
                         move.perform(attacker, defender);
                         checkIfAlreadyDefeated(defender);
 
-                        waitSeconds(.5);
+                        utility.getClock().waitFor(.5);
 
                         counterMove.perform(defender, attacker);
                         checkIfAlreadyDefeated(attacker);
@@ -46,7 +50,7 @@ public class Battle {
                         counterMove.perform(defender, attacker);
                         checkIfAlreadyDefeated(attacker);
 
-                        waitSeconds(.5);
+                        utility.getClock().waitFor(.5);
 
                         move.perform(attacker, defender);
                         checkIfAlreadyDefeated(defender);
@@ -55,7 +59,7 @@ public class Battle {
                     attacker.setNimble(false);
                     defender.setNimble(false);
 
-                    waitSeconds(2);
+                    utility.getClock().waitFor(2);
                 }
 
                 attacker.setShield(0);
@@ -67,9 +71,8 @@ public class Battle {
                 attacker.heal(2.5);
                 defender.heal(2.5);
 
-                displayStatus(fighterOne, fighterTwo);
-
-                waitSeconds(4);
+                utility.getPrinter().printStatus(fighterOne, fighterTwo);
+                utility.getClock().waitFor(4);
             }
         } catch (FighterDefeatedException ignored) {
         }
@@ -93,6 +96,6 @@ public class Battle {
         else
             winner = null;
 
-        displayResults(winner);
+        utility.getPrinter().printResults(winner);
     }
 }

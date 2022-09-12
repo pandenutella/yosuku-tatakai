@@ -6,11 +6,10 @@ import com.pandenutella.yt.core.enums.Speed;
 
 import static com.pandenutella.yt.core.enums.Color.BOLD_RED;
 import static com.pandenutella.yt.core.enums.Speed.SLOW;
-import static com.pandenutella.yt.core.utilities.BattleUtility.displayMoveUsed;
 import static com.pandenutella.yt.core.utilities.ColorUtility.colorTextWith;
 import static java.lang.String.valueOf;
 
-public class Uppercut implements Move {
+public class Uppercut extends Move {
     @Override
     public Speed getSpeed() {
         return SLOW;
@@ -21,7 +20,7 @@ public class Uppercut implements Move {
         double damage = user.dealDamage(20);
         double dealtDamage = target.receiveDamage(damage);
 
-        displayMoveUsed(user.getName(), "Uppercut", target.getName(),
+        getPrinter().printMoveUsed(user.getName(), "Uppercut", target.getName(),
                 "dealing %s damage".formatted(colorTextWith(valueOf(dealtDamage), BOLD_RED)));
     }
 }
