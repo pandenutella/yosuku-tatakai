@@ -2,6 +2,8 @@ package com.pandenutella.yt.core.config;
 
 import com.pandenutella.yt.core.Fighter;
 
+import java.util.List;
+
 public interface Printer {
     void printThickLine();
 
@@ -13,7 +15,7 @@ public interface Printer {
 
     void printResults(String winner);
 
-    void printStatus(Fighter fighterOne, Fighter fighterTwo);
+    void printStatus(List<Fighter> fighterList);
 
     void printMoveUsed(String attacker, String move, String defender, String otherDescription);
 }

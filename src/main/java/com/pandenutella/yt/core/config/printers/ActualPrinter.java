@@ -3,6 +3,8 @@ package com.pandenutella.yt.core.config.printers;
 import com.pandenutella.yt.core.Fighter;
 import com.pandenutella.yt.core.config.Printer;
 
+import java.util.List;
+
 import static com.pandenutella.yt.core.enums.Color.BOLD_BLUE;
 import static com.pandenutella.yt.core.enums.Color.BOLD_GREEN;
 import static com.pandenutella.yt.core.enums.Color.BOLD_YELLOW;
@@ -51,19 +53,16 @@ public class ActualPrinter implements Printer {
     }
 
     @Override
-    public void printStatus(Fighter fighterOne, Fighter fighterTwo) {
+    public void printStatus(List<Fighter> fighterList) {
         printThickLine();
         System.out.println(colorTextWith("[STATUS]", BOLD_BLUE));
 
-        System.out.printf("%s has %s/%s HP%n",
-                colorTextWith(fighterOne.getName(), BOLD_YELLOW),
-                colorTextWith(valueOf(fighterOne.getLife()), BOLD_GREEN),
-                colorTextWith(valueOf(fighterOne.getMaxLife()), BOLD_GREEN));
-        System.out.printf("%s has %s/%s HP%n",
-                colorTextWith(fighterTwo.getName(), BOLD_YELLOW),
-                colorTextWith(valueOf(fighterTwo.getLife()), BOLD_GREEN),
-                colorTextWith(valueOf(fighterTwo.getMaxLife()), BOLD_GREEN));
-
+        fighterList.forEach(fighter -> {
+            System.out.printf("%s has %s/%s HP%n",
+                    colorTextWith(fighter.getName(), BOLD_YELLOW),
+                    colorTextWith(valueOf(fighter.getLife()), BOLD_GREEN),
+                    colorTextWith(valueOf(fighter.getMaxLife()), BOLD_GREEN));
+        });
         printThickLine();
     }
 

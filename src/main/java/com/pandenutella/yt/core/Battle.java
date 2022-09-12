@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static com.pandenutella.yt.core.utilities.SpeedChecker.isSpeedFaster;
+import static java.util.Arrays.asList;
 
 @RequiredArgsConstructor
 public class Battle {
@@ -71,7 +72,7 @@ public class Battle {
                 attacker.heal(2.5);
                 defender.heal(2.5);
 
-                utility.getPrinter().printStatus(fighterOne, fighterTwo);
+                utility.getPrinter().printStatus(asList(fighterOne, fighterTwo));
                 utility.getClock().waitFor(4);
             }
         } catch (FighterDefeatedException ignored) {
