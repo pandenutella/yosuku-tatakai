@@ -28,11 +28,11 @@ public class Battle {
                 utility.getPrinter().printRoundHeader(round, attacker.getName(), defender.getName());
                 utility.getClock().waitFor(2);
 
-                String offenseManaCostsRaw = attacker.attack(attacker.getLife(), defender.getLife());
+                String offenseManaCostsRaw = attacker.attack(attacker.getLife(), attacker.getMana(), defender.getLife(), defender.getMana());
                 int[] offenseManaCosts = manaCostConverter.getManaCosts(offenseManaCostsRaw, spellsPerRound);
                 int totalOffenseManaCost = manaCostConverter.getTotalManaCost(offenseManaCostsRaw, spellsPerRound);
 
-                String defenseManaCostRaw = defender.defend(defender.getLife(), defender.getMana(), attacker.getMana(), totalOffenseManaCost);
+                String defenseManaCostRaw = defender.defend(defender.getLife(), defender.getMana(), attacker.getLife(), attacker.getMana(), totalOffenseManaCost);
                 int[] defenseManaCosts = manaCostConverter.getManaCosts(defenseManaCostRaw, spellsPerRound);
 
                 for (int spellIndex = 0; spellIndex < spellsPerRound; spellIndex++) {
@@ -67,7 +67,7 @@ public class Battle {
                         attacker.regenerateMana(1);
                         utility.getPrinter().printSpellUsed(attacker.getName(), "Meditate", null,
                                 "generating %s mana".formatted(colorTextWith(valueOf(1), BOLD_BLUE)));
-                    } else if(offenseManaCost <= attacker.getMana()) {
+                    } else if (offenseManaCost <= attacker.getMana()) {
                         attacker.burnMana(offenseManaCost);
                         double damageDealt = max(offenseManaCost - defenseManaCost, 0);
                         defender.receiveDamage(damageDealt);

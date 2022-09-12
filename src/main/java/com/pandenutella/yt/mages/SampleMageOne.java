@@ -14,7 +14,7 @@ public class SampleMageOne extends Mage {
     }
 
     @Override
-    protected String attack(double enemyLife, double enemyMana) {
+    protected String attack(double life, double mana, double enemyLife, double enemyMana) {
         int offenseVariation = random.nextInt(3);
 
         return switch (offenseVariation) {
@@ -26,7 +26,7 @@ public class SampleMageOne extends Mage {
     }
 
     @Override
-    protected String defend(double life, double mana, double enemyMana, int enemyTotalManaSpent) {
+    protected String defend(double life, double mana, double enemyLife, double enemyMana, int enemyTotalManaSpent) {
         int defenseVariation = random.nextInt(3);
 
         return switch (defenseVariation) {

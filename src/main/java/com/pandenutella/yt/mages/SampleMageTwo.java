@@ -9,12 +9,12 @@ public class SampleMageTwo extends Mage {
     }
 
     @Override
-    protected String attack(double enemyLife, double enemyMana) {
+    protected String attack(double life, double mana, double enemyLife, double enemyMana) {
         return "333";
     }
 
     @Override
-    protected String defend(double life, double mana, double enemyMana, int enemyTotalManaSpent) {
+    protected String defend(double life, double mana, double enemyLife, double enemyMana, int enemyTotalManaSpent) {
         return "333";
     }
 }
