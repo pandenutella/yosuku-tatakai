@@ -9,6 +9,13 @@ import org.junit.jupiter.api.Test;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 
+import static com.pandenutella.yt.core.ConsoleColorUtility.colorBy;
+import static com.pandenutella.yt.core.ConsoleColors.GREEN;
+import static com.pandenutella.yt.core.ConsoleColors.GREEN_BACKGROUND;
+import static com.pandenutella.yt.core.ConsoleColors.RED;
+import static com.pandenutella.yt.core.ConsoleColors.RED_BACKGROUND;
+import static com.pandenutella.yt.core.ConsoleColors.YELLOW;
+import static com.pandenutella.yt.core.ConsoleColors.YELLOW_BACKGROUND;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -50,7 +57,24 @@ class ActualPrinterTest {
 
         printer.printCharacterStatuses(character1, character2);
 
-        assertThat("[          ][<<<<<<<<<<]\r\n").isEqualTo(outputContent.toString());
+        assertThat("%s          %s%s%s%s%s%s%s%s%s%s%s%s%s\r\n"
+                .formatted(
+                        colorBy("[", RED),
+                        colorBy("]", RED),
+                        colorBy("[", GREEN),
+                        colorBy(" ", GREEN_BACKGROUND),
+                        colorBy(" ", GREEN_BACKGROUND),
+                        colorBy(" ", GREEN_BACKGROUND),
+                        colorBy(" ", GREEN_BACKGROUND),
+                        colorBy(" ", GREEN_BACKGROUND),
+                        colorBy(" ", GREEN_BACKGROUND),
+                        colorBy(" ", GREEN_BACKGROUND),
+                        colorBy(" ", GREEN_BACKGROUND),
+                        colorBy(" ", GREEN_BACKGROUND),
+                        colorBy(" ", GREEN_BACKGROUND),
+                        colorBy("]", GREEN)
+                )
+        ).isEqualTo(outputContent.toString());
     }
 
     @Test
@@ -66,6 +90,24 @@ class ActualPrinterTest {
 
         printer.printCharacterStatuses(character1, character2);
 
-        assertThat("[>>>>>>    ][      <<<<]\r\n").isEqualTo(outputContent.toString());
+        assertThat("%s%s%s%s%s%s%s    %s%s      %s%s%s%s%s\r\n"
+                .formatted(
+                        colorBy("[", YELLOW),
+                        colorBy(" ", YELLOW_BACKGROUND),
+                        colorBy(" ", YELLOW_BACKGROUND),
+                        colorBy(" ", YELLOW_BACKGROUND),
+                        colorBy(" ", YELLOW_BACKGROUND),
+                        colorBy(" ", YELLOW_BACKGROUND),
+                        colorBy(" ", YELLOW_BACKGROUND),
+                        colorBy("]", YELLOW),
+                        colorBy("[", RED),
+                        colorBy(" ", RED_BACKGROUND),
+                        colorBy(" ", RED_BACKGROUND),
+                        colorBy(" ", RED_BACKGROUND),
+                        colorBy(" ", RED_BACKGROUND),
+                        colorBy("]", RED
+                        )
+                )
+        ).isEqualTo(outputContent.toString());
     }
 }
