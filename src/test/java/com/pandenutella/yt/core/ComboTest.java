@@ -82,6 +82,26 @@ class ComboTest {
     }
 
     Move buildMove(String name) {
-        return () -> name;
+        return new Move() {
+            @Override
+            public String getName() {
+                return name;
+            }
+
+            @Override
+            public double getDamage() {
+                return 0;
+            }
+
+            @Override
+            public double getShield() {
+                return 0;
+            }
+
+            @Override
+            public Speed getSpeed() {
+                return null;
+            }
+        };
     }
 }
