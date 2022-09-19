@@ -1,6 +1,8 @@
 package com.pandenutella.yt.core;
 
 public interface GameCharacter {
+    String getName();
+
     Combo initiateAttack();
 
     Combo formulateCounter();
