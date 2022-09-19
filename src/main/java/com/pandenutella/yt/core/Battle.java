@@ -15,16 +15,19 @@ public class Battle {
     private final CharacterMoveExecutor executor2;
 
     private final Printer printer;
+    private final Clock clock;
 
     public void fight() throws InvalidNumberOfMovesInComboException, AllowedRepeatedMovesExceededException {
         int movesPerCombo = 3;
 
         printer.printLine("------------------------");
         printer.printLine("%s vs %s".formatted(character1.getName(), character2.getName()));
+        printer.printLine("------------------------");
+        clock.pauseFor(4);
 
         try {
             for (int round = 1; round <= 10; round++) {
-                printer.printLine("------------------------");
+                if (round > 1) printer.printLine("------------------------");
                 printer.printRound(round);
 
                 GameCharacter attacker = round % 2 == 1 ? character1 : character2;
@@ -58,6 +61,7 @@ public class Battle {
                 }
 
                 printer.printCharacterStatuses(character1, character2);
+                clock.pauseFor(1);
             }
 
             if (character1.getHP() > character2.getHP())
