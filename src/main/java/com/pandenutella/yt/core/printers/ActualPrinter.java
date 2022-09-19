@@ -7,12 +7,14 @@ import com.pandenutella.yt.core.Move;
 import com.pandenutella.yt.core.Printer;
 
 import static com.pandenutella.yt.core.ConsoleColorUtility.colorBy;
+import static com.pandenutella.yt.core.ConsoleColors.BLUE_BOLD;
 import static com.pandenutella.yt.core.ConsoleColors.GREEN;
 import static com.pandenutella.yt.core.ConsoleColors.GREEN_BACKGROUND;
 import static com.pandenutella.yt.core.ConsoleColors.RED;
 import static com.pandenutella.yt.core.ConsoleColors.RED_BACKGROUND;
 import static com.pandenutella.yt.core.ConsoleColors.YELLOW;
 import static com.pandenutella.yt.core.ConsoleColors.YELLOW_BACKGROUND;
+import static com.pandenutella.yt.core.ConsoleColors.YELLOW_BOLD;
 import static java.util.stream.Collectors.joining;
 
 public class ActualPrinter implements Printer {
@@ -20,6 +22,11 @@ public class ActualPrinter implements Printer {
     @Override
     public void printLine(String message) {
         System.out.println(message);
+    }
+
+    @Override
+    public void printRound(int round) {
+        printLine("%s %d".formatted(colorBy("ROUND", BLUE_BOLD), round));
     }
 
     @Override
@@ -36,7 +43,12 @@ public class ActualPrinter implements Printer {
                 .map(Move::getName)
                 .collect(joining(" > "));
 
-        printLine("%s: %s".formatted(character.getName(), comboString));
+        printLine("%s: %s"
+                .formatted(
+                        colorBy(character.getName(), YELLOW_BOLD),
+                        comboString
+                )
+        );
     }
 
     private String getHPBar(GameCharacter character, boolean inverted) {
