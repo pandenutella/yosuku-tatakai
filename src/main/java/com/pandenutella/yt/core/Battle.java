@@ -34,7 +34,7 @@ public class Battle {
                 GameCharacter defender = round % 2 == 1 ? character2 : character1;
 
                 Combo attackerCombo = attacker.initiateAttack();
-                Combo defenderCombo = defender.formulateCounter();
+                Combo defenderCombo = defender.formulateCounter(attackerCombo.getMoveList().get(0));
 
                 attackerCombo.validate();
                 defenderCombo.validate();
@@ -59,6 +59,8 @@ public class Battle {
                     else if (attacker.getHP() == 0)
                         throw new GameOverException(defender.getName());
                 }
+
+                attacker.observeEnemyCounter(defenderCombo.getMoveList());
 
                 printer.printCharacterStatuses(character1, character2);
                 clock.pauseFor(1);

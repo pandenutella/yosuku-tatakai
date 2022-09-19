@@ -1,7 +1,10 @@
 package com.pandenutella.yt.core.characters;
 
 import com.pandenutella.yt.core.Combo;
+import com.pandenutella.yt.core.Move;
 import org.junit.jupiter.api.Test;
+
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -64,8 +67,12 @@ class FighterTest {
             }
 
             @Override
-            public Combo formulateCounter() {
+            public Combo formulateCounter(Move firstMove) {
                 return null;
+            }
+
+            @Override
+            public void observeEnemyCounter(List<Move> moveList) {
             }
         };
     }
