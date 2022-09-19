@@ -54,6 +54,11 @@ class FighterTest {
     Fighter buildFighter() {
         return new Fighter() {
             @Override
+            public String getName() {
+                return null;
+            }
+
+            @Override
             public Combo initiateAttack() {
                 return null;
             }
