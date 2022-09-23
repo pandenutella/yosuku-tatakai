@@ -75,7 +75,7 @@ public class ActualPrinter implements Printer {
 
             stringBuilder.append(isHP
                     ? colorBy(" ", barColor)
-                    : " ");
+                    : colorBy(".", barOutlineColor));
         }
         stringBuilder.append(colorBy("]", barOutlineColor));
 
