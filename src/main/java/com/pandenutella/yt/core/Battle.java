@@ -11,9 +11,6 @@ public class Battle {
     private final GameCharacter character1;
     private final GameCharacter character2;
 
-    private final CharacterMoveExecutor executor1;
-    private final CharacterMoveExecutor executor2;
-
     private final Printer printer;
     private final Clock clock;
 
@@ -39,8 +36,8 @@ public class Battle {
                 attackerCombo.validate();
                 defenderCombo.validate();
 
-                CharacterMoveExecutor attackerExecutor = round % 2 == 1 ? executor1 : executor2;
-                CharacterMoveExecutor defenderExecutor = round % 2 == 1 ? executor2 : executor1;
+                CharacterMoveExecutor attackerExecutor = new CharacterMoveExecutor(round % 2 == 1 ? character2 : character1);
+                CharacterMoveExecutor defenderExecutor = new CharacterMoveExecutor(round % 2 == 1 ? character1 : character2);
 
                 printer.printCharacterCombo(attacker, attackerCombo);
                 printer.printCharacterCombo(defender, defenderCombo);
