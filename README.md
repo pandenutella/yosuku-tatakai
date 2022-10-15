@@ -2,7 +2,8 @@
 
 Made by [pandenutella](https://github.com/pandenutella)
 
-#### For those who are interested to use this project in their groups, kindly clone the project and store it somewhere accessible to all of your programmers/participants. (Do not directly push in this GitHub project) ####
+**For those who are interested to use this project in their groups, kindly clone the project and store it somewhere
+accessible to all of your programmers/participants. Do not directly push in this GitHub project.**
 
 ## Description
 
