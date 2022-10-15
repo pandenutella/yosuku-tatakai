@@ -71,9 +71,19 @@ class ActualPrinterTest {
 
         printer.printCharacterStatuses(character1, character2);
 
-        assertThat("%s          %s%s%s%s%s%s%s%s%s%s%s%s%s\r\n"
+        assertThat("%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s\r\n"
                 .formatted(
                         colorBy("[", RED),
+                        colorBy(".", RED),
+                        colorBy(".", RED),
+                        colorBy(".", RED),
+                        colorBy(".", RED),
+                        colorBy(".", RED),
+                        colorBy(".", RED),
+                        colorBy(".", RED),
+                        colorBy(".", RED),
+                        colorBy(".", RED),
+                        colorBy(".", RED),
                         colorBy("]", RED),
                         colorBy("[", GREEN),
                         colorBy(" ", GREEN_BACKGROUND),
@@ -104,7 +114,7 @@ class ActualPrinterTest {
 
         printer.printCharacterStatuses(character1, character2);
 
-        assertThat("%s%s%s%s%s%s%s    %s%s      %s%s%s%s%s\r\n"
+        assertThat("%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s\r\n"
                 .formatted(
                         colorBy("[", YELLOW),
                         colorBy(" ", YELLOW_BACKGROUND),
@@ -113,8 +123,18 @@ class ActualPrinterTest {
                         colorBy(" ", YELLOW_BACKGROUND),
                         colorBy(" ", YELLOW_BACKGROUND),
                         colorBy(" ", YELLOW_BACKGROUND),
+                        colorBy(".", YELLOW),
+                        colorBy(".", YELLOW),
+                        colorBy(".", YELLOW),
+                        colorBy(".", YELLOW),
                         colorBy("]", YELLOW),
                         colorBy("[", RED),
+                        colorBy(".", RED),
+                        colorBy(".", RED),
+                        colorBy(".", RED),
+                        colorBy(".", RED),
+                        colorBy(".", RED),
+                        colorBy(".", RED),
                         colorBy(" ", RED_BACKGROUND),
                         colorBy(" ", RED_BACKGROUND),
                         colorBy(" ", RED_BACKGROUND),
