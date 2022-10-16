@@ -29,4 +29,11 @@ class StraightTest {
     void when_getSpeed_should_return_SLOW() {
         assertThat(move.getSpeed()).isEqualTo(SLOW);
     }
+
+    @Test
+    void when_getPrintedString_should_return_the_correct_printed_string() {
+        String printedString = move.getPrintedString();
+
+        assertThat(printedString).isEqualTo("   (   >)==O");
+    }
 }

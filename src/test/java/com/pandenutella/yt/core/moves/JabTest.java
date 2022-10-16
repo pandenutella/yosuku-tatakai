@@ -29,4 +29,11 @@ class JabTest {
     void when_getSpeed_should_return_FAST() {
         assertThat(move.getSpeed()).isEqualTo(FAST);
     }
+
+    @Test
+    void when_getPrintedString_should_return_the_correct_printed_string() {
+        String printedString = move.getPrintedString();
+
+        assertThat(printedString).isEqualTo("   (O > <)=o");
+    }
 }

@@ -102,6 +102,11 @@ class ComboTest {
             public Speed getSpeed() {
                 return null;
             }
+
+            @Override
+            public String getPrintedString() {
+                return null;
+            }
         };
     }
 }

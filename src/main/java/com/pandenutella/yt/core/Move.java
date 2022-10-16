@@ -8,4 +8,6 @@ public interface Move {
     double getShield();
 
     Speed getSpeed();
+
+    String getPrintedString();
 }

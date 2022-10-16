@@ -25,4 +25,9 @@ public class Straight implements Move {
     public Speed getSpeed() {
         return SLOW;
     }
+
+    @Override
+    public String getPrintedString() {
+        return "   (   >)==O";
+    }
 }

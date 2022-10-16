@@ -25,4 +25,9 @@ public class Block implements Move {
     public Speed getSpeed() {
         return FAST;
     }
+
+    @Override
+    public String getPrintedString() {
+        return "   (  > <)Oo";
+    }
 }
