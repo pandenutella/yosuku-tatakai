@@ -11,21 +11,20 @@ public class Battle {
     private final GameCharacter character1;
     private final GameCharacter character2;
 
-    private final Printer printer;
-    private final Clock clock;
+    private final Config config;
 
     public void fight() throws InvalidNumberOfMovesInComboException, AllowedRepeatedMovesExceededException {
         int movesPerCombo = 3;
 
-        printer.printLine("------------------------");
-        printer.printLine("%s vs %s".formatted(character1.getName(), character2.getName()));
-        printer.printLine("------------------------");
-        clock.pauseFor(4);
+        config.getPrinter().printLine("------------------------");
+        config.getPrinter().printLine("%s vs %s".formatted(character1.getName(), character2.getName()));
+        config.getPrinter().printLine("------------------------");
+        config.getClock().pauseFor(4);
 
         try {
             for (int round = 1; round <= 10; round++) {
-                if (round > 1) printer.printLine("------------------------");
-                printer.printRound(round);
+                if (round > 1) config.getPrinter().printLine("------------------------");
+                config.getPrinter().printRound(round);
 
                 GameCharacter attacker = round % 2 == 1 ? character1 : character2;
                 GameCharacter defender = round % 2 == 1 ? character2 : character1;
@@ -39,15 +38,21 @@ public class Battle {
                 CharacterMoveExecutor attackerExecutor = new CharacterMoveExecutor(round % 2 == 1 ? character2 : character1);
                 CharacterMoveExecutor defenderExecutor = new CharacterMoveExecutor(round % 2 == 1 ? character1 : character2);
 
-                printer.printCharacterCombo(attacker, attackerCombo);
-                printer.printCharacterCombo(defender, defenderCombo);
+                config.getPrinter().printCharacterCombo(attacker, attackerCombo);
+                config.getPrinter().printCharacterCombo(defender, defenderCombo);
 
                 for (int i = 0; i < movesPerCombo; i++) {
                     Move attackerMove = attackerCombo.getMoveList().get(i);
                     Move defenderMove = defenderCombo.getMoveList().get(i);
 
-                    attackerExecutor.execute(attackerMove, defenderMove);
-                    defenderExecutor.execute(defenderMove, attackerMove);
+                    String attackMovePrintedString = attackerExecutor.execute(attackerMove, defenderMove);
+                    String counterMovePrintedString = defenderExecutor.execute(defenderMove, attackerMove);
+
+                    String character1MovePrintedString = round % 2 != 0 ? attackMovePrintedString : counterMovePrintedString;
+                    String character2MovePrintedString = round % 2 == 0 ? attackMovePrintedString : counterMovePrintedString;
+
+                    config.getPrinter().printCharacterStatuses(character1, character2);
+                    config.getPrinter().printLine(character1MovePrintedString + config.getStringUtility().flip(character2MovePrintedString));
 
                     if (attacker.getHP() <= 0 && defender.getHP() <= 0)
                         throw new GameOverException(null);
@@ -59,8 +64,7 @@ public class Battle {
 
                 attacker.observeEnemyCounter(defenderCombo.getMoveList());
 
-                printer.printCharacterStatuses(character1, character2);
-                clock.pauseFor(1);
+                config.getClock().pauseFor(1);
             }
 
             if (character1.getHP() > character2.getHP())
@@ -70,9 +74,9 @@ public class Battle {
             else
                 throw new GameOverException(null);
         } catch (GameOverException e) {
-            printer.printLine("------------------------");
-            printer.printLine(e.getMessage());
-            printer.printLine("------------------------");
+            config.getPrinter().printLine("------------------------");
+            config.getPrinter().printLine(e.getMessage());
+            config.getPrinter().printLine("------------------------");
         }
     }
 }
