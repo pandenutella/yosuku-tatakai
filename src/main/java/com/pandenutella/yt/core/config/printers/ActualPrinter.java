@@ -1,10 +1,10 @@
-package com.pandenutella.yt.core.printers;
+package com.pandenutella.yt.core.config.printers;
 
 import com.pandenutella.yt.core.Combo;
 import com.pandenutella.yt.core.ConsoleColors;
 import com.pandenutella.yt.core.GameCharacter;
 import com.pandenutella.yt.core.Move;
-import com.pandenutella.yt.core.Printer;
+import com.pandenutella.yt.core.config.Printer;
 
 import static com.pandenutella.yt.core.ConsoleColorUtility.colorBy;
 import static com.pandenutella.yt.core.ConsoleColors.BLUE_BOLD;

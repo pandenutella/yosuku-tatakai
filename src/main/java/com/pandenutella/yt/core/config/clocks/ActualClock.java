@@ -1,6 +1,6 @@
-package com.pandenutella.yt.core.clocks;
+package com.pandenutella.yt.core.config.clocks;
 
-import com.pandenutella.yt.core.Clock;
+import com.pandenutella.yt.core.config.Clock;
 import lombok.SneakyThrows;
 
 import static java.lang.Thread.sleep;

@@ -1,4 +1,7 @@
-package com.pandenutella.yt.core;
+package com.pandenutella.yt.core.config;
+
+import com.pandenutella.yt.core.Combo;
+import com.pandenutella.yt.core.GameCharacter;
 
 public interface Printer {
     void printLine(String message);
